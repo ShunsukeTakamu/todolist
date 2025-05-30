@@ -1,37 +1,68 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>新規登録</title>
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>SignUp</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <style>
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 100px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h2 class="mt-5">新規登録</h2>
-    <form action="UserRegisterServlet" method="post">
-      <div class="mb-3">
-        <label>氏名</label>
-        <input type="text" name="name" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label>メール</label>
-        <input type="email" name="email" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label>パスワード</label>
-        <input type="password" name="password" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label>パスワード確認</label>
-        <input type="password" name="confirm" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-success">登録</button>
-    </form>
 
-    <p class="mt-3">すでにアカウントをお持ちの方は <a href="login.jsp">ログイン</a></p>
-  </div>
+<div class="container">
+    <div class="mt-1 row">
+        <div class="col-12 col-md-6">
+            <h1 class="mt-5 text-center text-md-start">SignUp</h1>
+        </div>
+
+        <div class="col-12 col-md-6 d-flex">
+            <div class="form-container mx-auto">
+                <form action="UserRegisterServlet" method="post">
+                    <div class="mb-3 row">
+                        <label class="col-12 col-sm-4">氏名</label>
+                        <div class="col-12 col-sm-8">
+                            <input type="text" name="name" class="form-control" placeholder="氏名を入力" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-12 col-sm-4">メール</label>
+                        <div class="col-12 col-sm-8">
+                            <input type="email" name="email" class="form-control" placeholder="メールを入力" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-12 col-sm-4">パスワード</label>
+                        <div class="col-12 col-sm-8">
+                            <input type="password" name="password" class="form-control" placeholder="パスワードを入力" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-12 col-sm-4">パスワード<br>確認</label>
+                        <div class="col-12 col-sm-8">
+                            <input type="password" name="confirm" class="form-control" placeholder="再入力" required>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">登録</button>
+                    </div>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="login.jsp">ログインはこちら</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

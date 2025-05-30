@@ -11,15 +11,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import utils.Db;
-
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	public LoginServlet() {
-		super();
-	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -30,27 +24,33 @@ public class LoginServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		request.setCharacterEncoding("UTF-8");
-		String name = request.getParameter("name");
+
+		String username = request.getParameter("name");
 		String password = request.getParameter("password");
 
-		try (Connection con = Db.open()) {
-			String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+		try (Connection con = utils.Db.open()) {
+			String sql = "SELECT id FROM users WHERE username = ? AND password = ?";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setString(1, name);
+			ps.setString(1, username);
 			ps.setString(2, password);
 
 			ResultSet rs = ps.executeQuery();
 
 			if (rs.next()) {
-				request.getSession().setAttribute("username", name);
-				response.sendRedirect(request.getContextPath() + "/task.jsp");
+			    int userId = rs.getInt("id");
+			    request.getSession().setAttribute("user_id", userId);
+			    request.getSession().setAttribute("username", username);
+
+			    // 成功メッセージをリダイレクト先に送る
+			    request.setAttribute("message", "ログインに成功しました！");
+			    request.getRequestDispatcher("/task.jsp").forward(request, response);
 			} else {
-				request.setAttribute("error", "ログインに失敗しました！");
-				request.getRequestDispatcher("/login.jsp").forward(request, response);
+			    request.setAttribute("error", "ログインに失敗しました！");
+			    request.getRequestDispatcher("/login.jsp").forward(request, response);
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendError(500);
 		}
 	}
 }

@@ -16,13 +16,8 @@ import utils.Db;
 public class UserRegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public UserRegisterServlet() {
-		super();
-	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// 新規登録ページに遷移（GETアクセス対応）
 		request.getRequestDispatcher("/signup.jsp").forward(request, response);
 	}
 
@@ -31,8 +26,7 @@ public class UserRegisterServlet extends HttpServlet {
 
 		request.setCharacterEncoding("UTF-8");
 
-		String name = request.getParameter("name");
-		String email = request.getParameter("email");
+		String username = request.getParameter("name");
 		String password = request.getParameter("password");
 		String confirm = request.getParameter("confirm");
 
@@ -43,20 +37,16 @@ public class UserRegisterServlet extends HttpServlet {
 		}
 
 		try (Connection con = Db.open()) {
-			String sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+			String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setString(1, name);
-			ps.setString(2, email);
-			ps.setString(3, password); // 実運用ではハッシュ化を推奨
-
+			ps.setString(1, username);
+			ps.setString(2, password);
 			ps.executeUpdate();
 
-			// 登録成功後にログインページへリダイレクト
-			response.sendRedirect(request.getContextPath() + "/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/task.jsp");
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response.sendError(500);
 		}
 	}
 }
