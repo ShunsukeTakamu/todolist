@@ -117,11 +117,17 @@ body {
 					<tbody>
 						<c:forEach var="t" items="${tasks}">
 							<tr>
-								<td><input type="checkbox" ${t.done ? "checked" : ""} /></td>
+								<td>
+									<form action="TaskToggleServlet" method="post"
+										style="display: inline;">
+										<input type="hidden" name="taskId" value="${t.id}" /> <input
+											type="checkbox" name="done" ${t.done ? "checked" : ""}
+											onchange="this.form.submit();" />
+									</form>
+								</td>
 								<td>${t.title}</td>
 								<td>${t.dueDate}</td>
 								<td>${t.assignee}</td>
-								
 								<td class="text-nowrap">
 									<button class="btn btn-sm btn-outline-primary me-1" disabled>編集</button>
 									<button class="btn btn-sm btn-outline-danger me-1" disabled>削除</button>
@@ -129,13 +135,41 @@ body {
 								</td>
 							</tr>
 						</c:forEach>
+
 					</tbody>
+
 				</table>
 			</div>
 		</div>
 	</div>
 
 	<script>
+
+	  function submitToggle(id, isChecked) {
+		    const form = document.createElement("form");
+		    form.method = "post";
+		    form.action = "TaskToggleServlet";
+
+		    // taskId を送信
+		    const taskIdInput = document.createElement("input");
+		    taskIdInput.type = "hidden";
+		    taskIdInput.name = "taskId";
+		    taskIdInput.value = id;
+		    form.appendChild(taskIdInput);  // ←ここ修正
+
+		    // チェックされていたら done=true を送信
+		    if (isChecked) {
+		      const doneInput = document.createElement("input");
+		      doneInput.type = "hidden";
+		      doneInput.name = "done";
+		      doneInput.value = "true";
+		      form.appendChild(doneInput);
+		    }
+
+		    document.body.appendChild(form);
+		    form.submit();
+		  }
+	
         function toggleForm() {
             document.getElementById("addForm").classList.toggle("d-none");
         }
@@ -165,6 +199,8 @@ body {
             document.getElementById("addForm").reset();
             document.getElementById("addForm").classList.add("d-none");
         }
+
+        
     </script>
 </body>
 
