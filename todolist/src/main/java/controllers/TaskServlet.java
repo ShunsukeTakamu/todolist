@@ -33,36 +33,33 @@ public class TaskServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	@WebServlet("/TaskServlet")
-	public class TaskListServlet extends HttpServlet {
-		@Override
-		protected void doGet(HttpServletRequest request, HttpServletResponse response)
-				throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-			ArrayList<Todo> todos = new ArrayList<>();
+		ArrayList<Todo> todos = new ArrayList<>();
 
-			try (Connection con = Db.open()) {
-				String sql = "SELECT title, assignee, due_date, done FROM todos ORDER BY due_date";
-				PreparedStatement ps = con.prepareStatement(sql);
-				ResultSet rs = ps.executeQuery();
+		try (Connection con = Db.open()) {
+			String sql = "SELECT title, assignee, due_date, done FROM todos ORDER BY due_date";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
 
-				while (rs.next()) {
-					Todo todo = new Todo();
-					todo.setTitle(rs.getString("title"));
-					todo.setAssignee(rs.getString("assignee"));
-					todo.setDueDate(rs.getDate("due_date").toLocalDate());
-					todo.setDone(rs.getBoolean("done"));
-					todos.add(todo);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				response.sendError(500);
-				return;
+			while (rs.next()) {
+				Todo todo = new Todo();
+				todo.setTitle(rs.getString("title"));
+				todo.setAssignee(rs.getString("assignee"));
+				todo.setDueDate(rs.getDate("due_date").toLocalDate());
+				todo.setDone(rs.getBoolean("done"));
+				todos.add(todo);
 			}
-
-			request.setAttribute("todos", todos);
-			request.getRequestDispatcher("/task.jsp").forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.sendError(500);
+			return;
 		}
+
+		request.setAttribute("todos", todos);
+		request.getRequestDispatcher("/task.jsp").forward(request, response);
 	}
 
 	/**
