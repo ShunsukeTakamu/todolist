@@ -1,10 +1,8 @@
 package controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,63 +10,45 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import beans.Todo;
-import utils.Db;
+import beans.Task;
+import services.TaskService;
 
-/**
- * Servlet implementation class TaskServlet
- */
 @WebServlet("/TaskServlet")
 public class TaskServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
 	public TaskServlet() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		TaskService service = new TaskService();
+		List<Task> tasks = service.selectAll();
 
-		ArrayList<Todo> todos = new ArrayList<>();
-
-		try (Connection con = Db.open()) {
-			String sql = "SELECT title, assignee, due_date, done FROM todos ORDER BY due_date";
-			PreparedStatement ps = con.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
-
-			while (rs.next()) {
-				Todo todo = new Todo();
-				todo.setTitle(rs.getString("title"));
-				todo.setAssignee(rs.getString("assignee"));
-				todo.setDueDate(rs.getDate("due_date").toLocalDate());
-				todo.setDone(rs.getBoolean("done"));
-				todos.add(todo);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.sendError(500);
-			return;
-		}
-
-		request.setAttribute("todos", todos);
+		request.setAttribute("tasks", tasks);
 		request.getRequestDispatcher("/task.jsp").forward(request, response);
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
+	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+
+		request.setCharacterEncoding("UTF-8");
+
+		String title = request.getParameter("title");
+		LocalDate dueDate = LocalDate.parse(request.getParameter("dueDate"));
+		String assignee = request.getParameter("assignee");
+
+		
+		Task task = new Task(title, dueDate, assignee);
+
+		TaskService service = new TaskService();
+		service.insert(task);
+
+		response.sendRedirect("TaskServlet");
 	}
 
 }

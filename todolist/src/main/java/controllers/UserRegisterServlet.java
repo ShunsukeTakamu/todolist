@@ -29,6 +29,9 @@ public class UserRegisterServlet extends HttpServlet {
 		String username = request.getParameter("name");
 		String password = request.getParameter("password");
 		String confirm = request.getParameter("confirm");
+		
+		request.getSession().setAttribute("username", username);
+		response.sendRedirect(request.getContextPath() + "/TaskServlet");
 
 		if (!password.equals(confirm)) {
 			request.setAttribute("error", "パスワードが一致しません！");
