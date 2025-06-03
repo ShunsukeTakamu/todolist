@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <link href="css/bootstrap.min.css" rel="stylesheet" />
-<script src="js/bootstrap.bundle.min.js"></script>
+
 <!DOCTYPE html>
 <html>
 
@@ -217,18 +217,6 @@ body {
       modal.show();
     }
 
-    function showUpdateToast(message) {
-        const toastEl = document.getElementById("updateToast");
-        toastEl.querySelector(".toast-body").textContent = message;
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-      }
-    function showUpdateToast(message) {
-        const toastEl = document.getElementById("updateToast");
-        toastEl.querySelector(".toast-body").textContent = message;
-        const toast = new bootstrap.Toast(toastEl);
-        toast.show();
-      }
 
   </script>
 </body>
