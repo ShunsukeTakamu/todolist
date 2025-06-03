@@ -18,8 +18,8 @@ public class TaskService {
 
 		List<Task> tasks = new ArrayList<>();
 
-		String sql = "SELECT * FROM tasks ORDER BY due_date";
-		
+		String sql = "SELECT * FROM tasks ORDER BY done";
+
 		try (Connection con = Db.open();
 				PreparedStatement ps = con.prepareStatement(sql);
 				ResultSet rs = ps.executeQuery()) {
@@ -61,27 +61,67 @@ public class TaskService {
 		}
 	}
 
+	public Task selectById(int id) {
+		String sql = "SELECT * FROM tasks WHERE id = ?";
+
+		try (Connection con = Db.open();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setInt(1, id);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					Task task = new Task(
+							rs.getString("title"),
+							rs.getDate("due_date").toLocalDate(),
+							rs.getString("assignee"));
+					task.setId(rs.getInt("id"));
+					task.setDone(rs.getBoolean("done"));
+
+					Timestamp ts = rs.getTimestamp("completed_at");
+					if (ts != null) {
+						task.setCompletedAt(ts.toLocalDateTime());
+					}
+
+					return task;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public void update(Task task) {
 		String sql = "UPDATE tasks SET title = ?, due_date = ?, assignee = ?, done = ?, completed_at = ? WHERE id = ?";
 
 		try (
 				Connection con = Db.open();
-				PreparedStatement ps = con.prepareStatement(sql);) {
+				PreparedStatement ps1 = con.prepareStatement("SELECT * FROM tasks WHERE id = ?");
+				PreparedStatement ps2 = con.prepareStatement(sql)) {
 
-			ps.setString(1, task.getTitle());
-			ps.setDate(2, Date.valueOf(task.getDueDate()));
-			ps.setString(3, task.getAssignee());
-			ps.setBoolean(4, task.isDone());
-
-			if (task.isDone()) {
-				ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-			} else {
-				ps.setNull(5, java.sql.Types.TIMESTAMP);
+			ps1.setInt(1, task.getId());
+			ResultSet rs = ps1.executeQuery();
+			boolean done = false;
+			if (rs.next()) {
+				done = rs.getBoolean("done");
 			}
 
-			ps.setInt(6, task.getId());
+			ps2.setString(1, task.getTitle());
+			ps2.setDate(2, Date.valueOf(task.getDueDate()));
+			ps2.setString(3, task.getAssignee());
+			ps2.setBoolean(4, done);// 引き継いだ値を使用
 
-			ps.executeUpdate();
+			if (done) {
+				ps2.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+			} else {
+				ps2.setNull(5, java.sql.Types.TIMESTAMP);
+			}
+
+			ps2.setInt(6, task.getId());
+
+			ps2.executeUpdate();
+			System.out.println("更新: " + task.getId() + ", " + task.getTitle() + ", " + task.getAssignee());
+
 
 		} catch (Exception se) {
 			se.printStackTrace();
@@ -117,7 +157,7 @@ public class TaskService {
 		try (
 				Connection con = Db.open();
 				PreparedStatement ps = con.prepareStatement(sql)) {
-			
+
 			ps.setInt(1, id);
 			ps.executeUpdate();
 		} catch (Exception se) {

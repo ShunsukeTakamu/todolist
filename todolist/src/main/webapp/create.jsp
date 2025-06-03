@@ -76,14 +76,14 @@ body {
 			<div calass="text-end mb-3" id="welcomeArea">こんにちは「</div>
 
 			<div class="mx-auto" style="max-width: 600px;">
-				<form action="TaskServlet" method="post" class="mt-4">
+				<form action="TaskCreateServlet" method="post" class="mt-4">
 					<div class="mb-3">
 						<label class="form-label">タスク名</label> <input type="text"
 							name="title" class="form-control" required>
 					</div>
 					<div class="mb-3">
 						<label class="form-label">期限</label> <input type="date"
-							name="due_date" class="form-control" required>
+							name="dueDate" class="form-control" required>
 					</div>
 					<div class="mb-3">
 						<label class="form-label">担当者</label> <input type="text"

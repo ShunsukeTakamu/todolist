@@ -18,6 +18,15 @@ public class Task {
 		this.dueDate = dueDate;
 		this.assignee = assignee;
 	}
+	
+	
+	public Task(int id, String title, LocalDate dueDate, String assignee) {
+	    this.id = id;
+	    this.title = title;
+	    this.dueDate = dueDate;
+	    this.assignee = assignee;
+	}
+
 
 
 

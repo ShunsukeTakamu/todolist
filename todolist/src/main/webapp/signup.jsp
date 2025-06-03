@@ -21,6 +21,9 @@
     </style>
 </head>
 <body>
+<c:if test="${not empty error}">
+    <div class="alert alert-danger">${error}</div>
+</c:if>
 
 <div class="container">
     <div class="mt-1 row">
@@ -40,7 +43,7 @@
                     <div class="mb-3 row">
                         <label class="col-12 col-sm-4">メール</label>
                         <div class="col-12 col-sm-8">
-                            <input type="email" name="email" class="form-control" placeholder="メールを入力" required>
+                            <input type="mail" name="mail" class="form-control" placeholder="メールを入力" required>
                         </div>
                     </div>
                     <div class="mb-3 row">

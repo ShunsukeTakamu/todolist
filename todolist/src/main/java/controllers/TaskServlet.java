@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.servlet.ServletException;
@@ -36,19 +35,7 @@ public class TaskServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		request.setCharacterEncoding("UTF-8");
-
-		String title = request.getParameter("title");
-		LocalDate dueDate = LocalDate.parse(request.getParameter("dueDate"));
-		String assignee = request.getParameter("assignee");
-
 		
-		Task task = new Task(title, dueDate, assignee);
-
-		TaskService service = new TaskService();
-		service.insert(task);
-
-		response.sendRedirect("TaskServlet");
 	}
 
 }

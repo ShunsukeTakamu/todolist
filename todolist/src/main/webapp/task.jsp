@@ -1,6 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<script src="js/bootstrap.bundle.min.js"></script>
 <!DOCTYPE html>
 <html>
 
@@ -51,11 +53,10 @@ body {
 </head>
 
 <body>
-	<!-- メニュー（モバイル用） -->
+	<!-- モバイル用メニュー -->
 	<nav class="navbar navbar-light bg-light d-md-none px-3">
 		<button class="btn btn-outline-secondary" type="button"
-			data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-			メニュー</button>
+			data-bs-toggle="collapse" data-bs-target="#sidebarMenu">メニュー</button>
 	</nav>
 
 	<div class="d-md-flex">
@@ -63,7 +64,7 @@ body {
 		<div class="collapse d-md-block" id="sidebarMenu">
 			<div class="sidebar">
 				<h5>メニュー</h5>
-				<a href="TaskServlet"metod="post">新規作成</a> <a href="TaskServlet">タスク一覧</a>
+				<a href="TaskCreateServlet">新規作成</a> <a href="TaskServlet">タスク一覧</a>
 				<br> <a href="LoginServlet" class="btn btn-outline-danger mt-4">ログアウト</a>
 			</div>
 		</div>
@@ -71,7 +72,7 @@ body {
 		<!-- メイン -->
 		<div class="content">
 			<div class="text-end mb-3" id="welcomeArea">
-				こんにちは、<strong>${sessionScope.username}</strong> 様
+				こんにちは、<strong>${sessionScope.username}</strong> さん
 			</div>
 
 			<h3 class="text-center">タスク一覧</h3>
@@ -81,9 +82,9 @@ body {
 				<button class="btn btn-secondary" onclick="toggleForm()">＋追加</button>
 			</div>
 
-			<!-- 入力フォーム -->
-			<form id="addForm" class="row g-2 mb-4 d-none" action="TaskServlet"
-				method="post">
+			<!-- 新規追加フォーム -->
+			<form id="addForm" class="row g-2 mb-4 d-none"
+				action="TaskCreateServlet" method="post">
 				<div class="col-12 col-md-3">
 					<input type="text" name="title" class="form-control"
 						placeholder="タスク名" required />
@@ -100,7 +101,7 @@ body {
 				</div>
 			</form>
 
-			<!-- タスク表示テーブル -->
+			<!-- タスクテーブル -->
 			<div class="table-wrapper mx-auto"
 				style="max-width: 1000px; width: 100%; padding: 0 10px;">
 				<table
@@ -128,58 +129,108 @@ body {
 								<td>${t.title}</td>
 								<td>${t.dueDate}</td>
 								<td>${t.assignee}</td>
-
-								<!-- 操作 -->
 								<td class="text-nowrap">
-									<!-- 編集 -->
-									<form action="TaskUpdateServlet" method="post" style="display: inline;">
-										<button class="btn btn-sm btn-outline-primary me-1">編集</button>
-									</form> <!-- 削除 -->
-									<form action="TaskDeleteServlet" method="post" style="display: inline;">
-										<input type="hidden" name="taskId" value="${t.id }" />
+									<button type="button"
+										class="btn btn-sm btn-outline-primary me-1"
+										onclick="openEditModal(${t.id}, '${fn:escapeXml(t.title)}', '${t.dueDate}', '${fn:escapeXml(t.assignee)}')">編集</button>
+									<form action="TaskDeleteServlet" method="post"
+										style="display: inline;">
+										<input type="hidden" name="taskId" value="${t.id}" />
 										<button class="btn btn-sm btn-outline-danger me-1">削除</button>
 									</form>
 									<button class="btn btn-sm btn-outline-info me-1">詳細</button>
 								</td>
 							</tr>
 						</c:forEach>
-
 					</tbody>
-
 				</table>
 			</div>
+
+			<!-- 編集モーダル -->
+			<div class="modal fade" id="editModal" tabindex="-1"
+				aria-labelledby="editModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<form class="modal-content" action="TaskUpdateServlet"
+						method="post">
+						<div class="modal-header">
+							<h5 class="modal-title" id="editModalLabel">タスク編集</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal"
+								aria-label="閉じる"></button>
+						</div>
+						<div class="modal-body">
+							<input type="hidden" name="id" id="modal-task-id" />
+
+							<div class="mb-3">
+								<label class="form-label">タスク名</label> <input type="text"
+									name="title" class="form-control" id="modal-title" />
+								<div class="form-text">
+									<span id="original-title"></span>
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label">期限</label> <input type="date"
+									name="dueDate" class="form-control" id="modal-dueDate" />
+								<div class="form-text">
+									<span id="original-dueDate"></span>
+								</div>
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label">担当者</label> <input type="text"
+									name="assignee" class="form-control" id="modal-assignee" />
+								<div class="form-text">
+									<span id="original-assignee"></span>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">保存</button>
+
+							<button type="button" class="btn btn-secondary"
+								data-bs-dismiss="modal">キャンセル</button>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			
 		</div>
 	</div>
 
 	<script>
-		function submitToggle(id, isChecked) {
-			const form = document.createElement("form");
-			form.method = "post";
-			form.action = "TaskToggleServlet";
+    function toggleForm() {
+      document.getElementById("addForm").classList.toggle("d-none");
+    }
 
-			// taskId を送信
-			const taskIdInput = document.createElement("input");
-			taskIdInput.type = "hidden";
-			taskIdInput.name = "taskId";
-			taskIdInput.value = id;
-			form.appendChild(taskIdInput); 
+    function openEditModal(id, title, dueDate, assignee) {
+      document.getElementById("modal-task-id").value = id;
+      document.getElementById("modal-title").value = title;
+      document.getElementById("modal-dueDate").value = dueDate;
+      document.getElementById("modal-assignee").value = assignee;
 
-			if (isChecked) {
-				const doneInput = document.createElement("input");
-				doneInput.type = "hidden";
-				doneInput.name = "done";
-				doneInput.value = "true";
-				form.appendChild(doneInput);
-			}
+      document.getElementById("original-title").innerText = title;
+      document.getElementById("original-dueDate").innerText = dueDate;
+      document.getElementById("original-assignee").innerText = assignee;
 
-			document.body.appendChild(form);
-			form.submit();
-		}
+      const modal = new bootstrap.Modal(document.getElementById("editModal"));
+      modal.show();
+    }
 
-		function toggleForm() {
-			document.getElementById("addForm").classList.toggle("d-none");
-		}
-	</script>
+    function showUpdateToast(message) {
+        const toastEl = document.getElementById("updateToast");
+        toastEl.querySelector(".toast-body").textContent = message;
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+      }
+    function showUpdateToast(message) {
+        const toastEl = document.getElementById("updateToast");
+        toastEl.querySelector(".toast-body").textContent = message;
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+      }
+
+  </script>
 </body>
 
 </html>

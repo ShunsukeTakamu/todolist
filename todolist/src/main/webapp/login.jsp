@@ -23,10 +23,9 @@
 </head>
 <body>
 	<c:if test="${not empty error}">
-		<script>
-			alert("${error}");
-		</script>
-	</c:if>
+    <div class="alert alert-danger">${error}</div>
+</c:if>
+
 	<div class="container">
 		<div class="mt-1 row">
 			<div class="col-12 col-md-6">
