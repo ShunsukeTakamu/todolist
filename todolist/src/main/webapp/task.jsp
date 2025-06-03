@@ -63,7 +63,7 @@ body {
 		<div class="collapse d-md-block" id="sidebarMenu">
 			<div class="sidebar">
 				<h5>メニュー</h5>
-				<a href="TaskCreateServlet">新規作成</a> <a href="TaskServlet">タスク一覧</a>
+				<a href="TaskServlet"metod="post">新規作成</a> <a href="TaskServlet">タスク一覧</a>
 				<br> <a href="LoginServlet" class="btn btn-outline-danger mt-4">ログアウト</a>
 			</div>
 		</div>
