@@ -55,7 +55,7 @@
 						</div>
 					</form>
 					<div class="text-center mt-3">
-						<a href="signup.jsp">新規登録はこちら</a>
+						<a href="UserRegisterServlet">新規登録はこちら</a>
 					</div>
 				</div>
 			</div>

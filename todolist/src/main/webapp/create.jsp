@@ -65,8 +65,8 @@ body {
 		<div class="collapse d-md-block" id="sidebarMenu">
 			<div class="sidebar">
 				<h5>メニュー</h5>
-				<a href="create.jsp">新規作成</a> <a href="task.jsp">タスク一覧</a> <br>
-				<a href="login.jsp" class="btn btn-outline-danger mt-4">ログアウト</a>
+				<a href="TaskCreateServlet">新規作成</a> <a href="TaskServlet">タスク一覧</a>
+				<br> <a href="LoginServlet" class="btn btn-outline-danger mt-4">ログアウト</a>
 			</div>
 		</div>
 
@@ -74,26 +74,26 @@ body {
 
 		<div class="content">
 			<div calass="text-end mb-3" id="welcomeArea">こんにちは「</div>
-			
-			<div class="mx-auto" style="max-width: 600px;">
-			<form action="TaskServlet" method="post" class="mt-4">
-				<div class="mb-3">
-					<label class="form-label">タスク名</label> <input type="text"
-						name="title" class="form-control" required>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">期限</label> <input type="date"
-						name="due_date" class="form-control" required>
-				</div>
-				<div class="mb-3">
-					<label class="form-label">担当者</label> <input type="text"
-						name="assignee" class="form-control" required>
-				</div>
-				<button type="submit" class="btn btn-secondary">保存して一覧へ</button>
-			</form>
 
+			<div class="mx-auto" style="max-width: 600px;">
+				<form action="TaskServlet" method="post" class="mt-4">
+					<div class="mb-3">
+						<label class="form-label">タスク名</label> <input type="text"
+							name="title" class="form-control" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">期限</label> <input type="date"
+							name="due_date" class="form-control" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">担当者</label> <input type="text"
+							name="assignee" class="form-control" required>
+					</div>
+					<button type="submit" class="btn btn-secondary">保存して一覧へ</button>
+				</form>
+
+			</div>
 		</div>
-	</div>
 	</div>
 
 </body>

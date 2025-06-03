@@ -63,8 +63,8 @@ body {
 		<div class="collapse d-md-block" id="sidebarMenu">
 			<div class="sidebar">
 				<h5>メニュー</h5>
-				<a href="create.jsp">新規作成</a> <a href="task.jsp">タスク一覧</a> <br>
-				<a href="login.jsp" class="btn btn-outline-danger mt-4">ログアウト</a>
+				<a href="TaskCreateServlet">新規作成</a> <a href="TaskServlet">タスク一覧</a>
+				<br> <a href="LoginServlet" class="btn btn-outline-danger mt-4">ログアウト</a>
 			</div>
 		</div>
 
@@ -128,10 +128,18 @@ body {
 								<td>${t.title}</td>
 								<td>${t.dueDate}</td>
 								<td>${t.assignee}</td>
+
+								<!-- 操作 -->
 								<td class="text-nowrap">
-									<button class="btn btn-sm btn-outline-primary me-1" disabled>編集</button>
-									<button class="btn btn-sm btn-outline-danger me-1" disabled>削除</button>
-									<button class="btn btn-sm btn-outline-info me-1" disabled>詳細</button>
+									<!-- 編集 -->
+									<form action="TaskUpdateServlet" method="post" style="display: inline;">
+										<button class="btn btn-sm btn-outline-primary me-1">編集</button>
+									</form> <!-- 削除 -->
+									<form action="TaskDeleteServlet" method="post" style="display: inline;">
+										<input type="hidden" name="taskId" value="${t.id }" />
+										<button class="btn btn-sm btn-outline-danger me-1">削除</button>
+									</form>
+									<button class="btn btn-sm btn-outline-info me-1">詳細</button>
 								</td>
 							</tr>
 						</c:forEach>
@@ -144,64 +152,34 @@ body {
 	</div>
 
 	<script>
+		function submitToggle(id, isChecked) {
+			const form = document.createElement("form");
+			form.method = "post";
+			form.action = "TaskToggleServlet";
 
-	  function submitToggle(id, isChecked) {
-		    const form = document.createElement("form");
-		    form.method = "post";
-		    form.action = "TaskToggleServlet";
+			// taskId を送信
+			const taskIdInput = document.createElement("input");
+			taskIdInput.type = "hidden";
+			taskIdInput.name = "taskId";
+			taskIdInput.value = id;
+			form.appendChild(taskIdInput); 
 
-		    // taskId を送信
-		    const taskIdInput = document.createElement("input");
-		    taskIdInput.type = "hidden";
-		    taskIdInput.name = "taskId";
-		    taskIdInput.value = id;
-		    form.appendChild(taskIdInput);  // ←ここ修正
+			if (isChecked) {
+				const doneInput = document.createElement("input");
+				doneInput.type = "hidden";
+				doneInput.name = "done";
+				doneInput.value = "true";
+				form.appendChild(doneInput);
+			}
 
-		    // チェックされていたら done=true を送信
-		    if (isChecked) {
-		      const doneInput = document.createElement("input");
-		      doneInput.type = "hidden";
-		      doneInput.name = "done";
-		      doneInput.value = "true";
-		      form.appendChild(doneInput);
-		    }
+			document.body.appendChild(form);
+			form.submit();
+		}
 
-		    document.body.appendChild(form);
-		    form.submit();
-		  }
-	
-        function toggleForm() {
-            document.getElementById("addForm").classList.toggle("d-none");
-        }
-
-        function addTask(event) {
-            event.preventDefault();
-
-            const name = document.getElementById("taskName").value;
-            const due = document.getElementById("dueDate").value;
-            const assignee = document.getElementById("assignee").value;
-
-            const tbody = document.querySelector("table tbody");
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td><input type="checkbox"></td>
-                <td>${name}</td>
-                <td>${due}</td>
-                <td>${assignee}</td>
-                <td>
-                  <button class="btn btn-sm btn-outline-primary me-1" disabled>編集</button>
-                  <button class="btn btn-sm btn-outline-danger me-1" disabled>削除</button>
-                  <button class="btn btn-sm btn-outline-info me-1" disabled>詳細</button>
-                </td>
-            `;
-            tbody.appendChild(row);
-
-            document.getElementById("addForm").reset();
-            document.getElementById("addForm").classList.add("d-none");
-        }
-
-        
-    </script>
+		function toggleForm() {
+			document.getElementById("addForm").classList.toggle("d-none");
+		}
+	</script>
 </body>
 
 </html>

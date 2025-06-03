@@ -29,9 +29,6 @@ public class UserRegisterServlet extends HttpServlet {
 		String username = request.getParameter("name");
 		String password = request.getParameter("password");
 		String confirm = request.getParameter("confirm");
-		
-		request.getSession().setAttribute("username", username);
-		response.sendRedirect(request.getContextPath() + "/TaskServlet");
 
 		if (!password.equals(confirm)) {
 			request.setAttribute("error", "パスワードが一致しません！");
@@ -46,10 +43,12 @@ public class UserRegisterServlet extends HttpServlet {
 			ps.setString(2, password);
 			ps.executeUpdate();
 
-			response.sendRedirect(request.getContextPath() + "/task.jsp");
+			request.getSession().setAttribute("username", username);
+			response.sendRedirect(request.getContextPath() + "/TaskServlet");
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.sendRedirect(request.getContextPath() + "/UserRegisterServlet");
 		}
 	}
 }

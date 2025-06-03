@@ -111,13 +111,15 @@ public class TaskService {
 		}
 	}
 
-	public void delete(Task task) {
-		String sql = "delete from players where id = ?";
+	public void delete(int id) {
+		String sql = "delete from tasks where id = ?";
 
 		try (
 				Connection con = Db.open();
-				PreparedStatement ps = con.prepareStatement(sql);) {
-
+				PreparedStatement ps = con.prepareStatement(sql)) {
+			
+			ps.setInt(1, id);
+			ps.executeUpdate();
 		} catch (Exception se) {
 			se.printStackTrace();
 		}

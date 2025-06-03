@@ -41,11 +41,9 @@ public class LoginServlet extends HttpServlet {
 			    request.getSession().setAttribute("user_id", userId);
 			    request.getSession().setAttribute("username", username);
 
-			    // 成功メッセージをリダイレクト先に送る
-			    request.setAttribute("message", "ログインに成功しました！");
-			    request.getRequestDispatcher("/task.jsp").forward(request, response);
+			    response.sendRedirect("TaskServlet");
 			} else {
-			    request.setAttribute("error", "ログインに失敗しました！");
+				request.setAttribute("error", "ログインに失敗しました！");
 			    request.getRequestDispatcher("/login.jsp").forward(request, response);
 			}
 

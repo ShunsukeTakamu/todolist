@@ -60,7 +60,7 @@
                     </div>
                 </form>
                 <div class="text-center mt-3">
-                    <a href="login.jsp">ログインはこちら</a>
+                    <a href="LoginServlet">ログインはこちら</a>
                 </div>
             </div>
         </div>
