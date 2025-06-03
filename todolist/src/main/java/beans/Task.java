@@ -1,6 +1,7 @@
 package beans;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,5 +30,88 @@ public class Task {
 	    this.dueDate = dueDate;
 	    this.assignee = assignee;
 	}
+
+
+
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getAssignee() {
+		return assignee;
+	}
+
+	public void setAssignee(String assignee) {
+		this.assignee = assignee;
+	}
+
+	public boolean isDone() {
+		return done;
+	}
+
+	public void setDone(boolean done) {
+		this.done = done;
+	}
+
+	public LocalDate getDueDate() {
+		return dueDate;
+	}
+
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
+	}
+
+
+
+	public LocalDate getCompleted_at_at() {
+		return completed_at_at;
+	}
+
+
+
+	public void setCompleted_at_at(LocalDate completed_at_at) {
+		this.completed_at_at = completed_at_at;
+	}
+
+
+
+	public LocalDate getCreated_at() {
+		return created_at;
+	}
+
+
+
+	public void setCreated_at(LocalDate created_at) {
+		this.created_at = created_at;
+	}
+
+
+
+	public int getId() {
+	    return id;
+	}
+
+	public void setId(int id) {
+	    this.id = id;
+	}
+
+
+
+	public void setCompletedAt(LocalDateTime localDateTime) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+
+
+
+
+
+
 
 }
