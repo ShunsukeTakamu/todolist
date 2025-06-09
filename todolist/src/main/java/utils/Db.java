@@ -17,6 +17,8 @@ public class Db {
 	        throw new SQLException("JDBCドライバが見つかりません", e);
 	    }
      
+	    
+	    
 	    Connection con = null;
 	    try {
 	        con = DriverManager.getConnection("jdbc:mariadb://192.168.5.172:3306/todo_app", "root", "root");// localhost
