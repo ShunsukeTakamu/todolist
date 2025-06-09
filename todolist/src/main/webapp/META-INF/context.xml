@@ -7,7 +7,7 @@
               username="root"
               password="root"
               driverClassName="org.mariadb.jdbc.Driver"
-              url="jdbc:mariadb://localhost:3306/todo_app?useUnicode=true&amp;characterEncoding=UTF-8"
+              url="jdbc:mariadb://192.168.5.134:3306/todo_app?useUnicode=true&amp;characterEncoding=UTF-8"
               maxTotal="4"
               maxIdle="10"
               maxWaitMillis="5000"

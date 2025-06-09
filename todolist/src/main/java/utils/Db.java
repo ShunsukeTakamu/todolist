@@ -16,10 +16,10 @@ public class Db {
 	        System.out.println("JDBCドライバが見つかりません: " + e.getMessage());
 	        throw new SQLException("JDBCドライバが見つかりません", e);
 	    }
-
+     
 	    Connection con = null;
 	    try {
-	        con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/todo_app", "root", "root");
+	        con = DriverManager.getConnection("jdbc:mariadb://192.168.5.172:3306/todo_app", "root", "root");// localhost
 	        System.out.println("データベース接続成功");
 	    } catch (SQLException e) {
 	        System.out.println("データベース接続失敗: " + e.getMessage());
